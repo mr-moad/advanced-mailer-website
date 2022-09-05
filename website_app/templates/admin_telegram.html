@@ -1,0 +1,17 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block admin_content %}
+    <h1 class="admin-section-title">social media accounts managment</h1>
+
+    <form class="telegram-form" method="POST" action="">
+      {{ form.hidden_tag() }}
+      <div class="input-wrapper">
+        {{ form.telegram_username.label(class="form-control-label") }}
+        {{ form.telegram_username(class="form-control form-control",id="telegram_user") }}
+      </div>
+
+      {{ form.submit(class="submit-btn") }}
+    </form>
+    <script>
+        document.querySelector('#telegram_user').value = '{{ telegram_username }}'
+    </script>
+{% endblock admin_content %}

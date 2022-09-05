@@ -1,0 +1,30 @@
+{% extends "layouts/layout.html" %}
+
+{% block website_content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-messages {{ category }}">
+                <i onclick="this.parentElement.style.display = 'none';" class="fa-solid fa-xmark"></i>
+                <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="auth-wrapper">
+        <div class="auth-container box-shadow">
+            <div class="auth-info">
+                <h2>Welcome to Owl Shop User Portal</h2>
+                <p>Get Invite Code from our Telegram - {% if '@' not in telegram %}"@"{% endif%}{{ telegram }} </p>
+                <a href="https://telegram.org/{{ telegram }}" target="_blank" class="primary-btn join-btn">
+                    <i class="fa-brands fa-telegram"></i>
+                    <span>Join us</span>
+                </a>
+            </div>
+            <div class="form-container">
+                {% block auth_form %}
+                {% endblock auth_form %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

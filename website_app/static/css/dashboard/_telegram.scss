@@ -1,0 +1,15 @@
+.telegram-form{
+    width: 24rem;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    label{
+        text-align: center;
+    }
+}
+.inputs-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

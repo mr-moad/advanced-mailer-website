@@ -1,0 +1,19 @@
+{% extends "layouts/layout.html" %}
+
+{% block website_content %}
+    <div class="auth-container box-shadow">
+        <div class="auth-info">
+            <h2>Welcome to Owl Shop User Portal</h2>
+            <p>Get Invite Code from our Telegram - @OWLOWNER</p>
+            <button class="primary-btn join-btn">
+                <i class="fa-brands fa-telegram"></i>
+                <span>Join us</span>
+            </button>
+        </div>
+        <div class="form-container">
+            {% block auth_form %}
+            {% endblock auth_form %}
+        </div>
+
+    </div>
+{% endblock %}

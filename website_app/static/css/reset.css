@@ -1,0 +1,5 @@
+*,
+*::after,
+*::before{
+    font-size: 1rem
+}

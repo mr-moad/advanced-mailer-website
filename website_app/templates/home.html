@@ -1,0 +1,47 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block admin_content %}
+    <div class="tips_wrapper">
+      <h2 class="tips_wrapper__title">how it works</h2>
+        <div class="tips_wrapper__body">
+            <h3 class="card-title">bind ip to licence</h3>
+            <p class="card-text">add your external ip address to your licence key to be able to use it .</p>
+        </div>
+
+    </div>
+    <h1 class="admin-section-title">Licences management</h1>
+    <div class="users_managment">
+        <table class="users_table">
+            <thead>
+                <tr>
+                  <th>#</th>
+                  <th>license</th>
+                  <th>ip address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for licence in licences %}
+                    <tr class=" bg-white">
+                      <th class="text-center" scope="row">{{ loop.index }}</th>
+                      <td class="text-center">{{ licence.licence }}</td>
+
+                      <td>
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
+                            {{ form.licence(style="display: none;",value=licence.id) }}
+                            {% if licence.ip_address %}
+                                {{ form.ip_address(value=licence.ip_address) }}
+                            {% else %}
+                                {{ form.ip_address() }}
+                            {% endif %}
+                            {{ form.submit(class="primary-btn") }}
+                        </form>
+
+                      </td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+{% endblock admin_content %}

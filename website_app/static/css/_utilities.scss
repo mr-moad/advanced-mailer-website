@@ -1,0 +1,25 @@
+.container{
+    width: 100%;
+    max-width: 1440px;
+    padding: 1rem;
+    margin: 0 auto;
+}
+.box-shadow{
+    box-shadow: 0 5px 10px rgba($color: #000000, $alpha: 0.2);
+}
+.link-like{
+    color: #0056b3;
+    text-decoration: none;
+    transition: color .3s ease-in-out;
+    &:hover, &:active{
+        text-decoration: underline;
+        color: darken($color: #0056b3, $amount: 0.6);
+    }
+}
+.primary-btn{
+    background-color: #4080FF;
+    color: #fff;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+}

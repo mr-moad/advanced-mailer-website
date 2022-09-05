@@ -1,0 +1,157 @@
+{% extends "layouts/dashboard_layout.html" %}
+
+{% block modals %}
+    <div id="suspendModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>suspend user</h2>
+                <i data-target="suspendModal" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal-content">
+                <p>are you sure you want to suspend user <span class="content-text"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button data-target="suspendModal" class="close">close</button>
+                <button onclick="suspendUser()" class="red action-btn">suspend</button>
+            </div>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>dalete user</h2>
+                <i data-target="deleteModal" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal-content">
+                <p>are you sure you want to delete user <span class="content-text"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button data-target="deleteModal" class="close">close</button>
+                <button onclick="deleteUser()" class="red action-btn">delete</button>
+            </div>
+        </div>
+    </div>
+    <div id="upgradeModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>upgarde user</h2>
+                <i data-target="upgradeModal" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal-content">
+                <p>are you sure you want to upgrade user <span class="content-text"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button data-target="upgradeModal" class="close">close</button>
+                <button onclick="upgradeUser()" class="green action-btn">upgrade</button>
+            </div>
+        </div>
+    </div>
+    <div id="downgradeModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>downgrade user</h2>
+                <i data-target="downgradeModal" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal-content">
+                <p>are you sure you want to downgrade user <span class="content-text"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button data-target="downgradeModal" class="close">close</button>
+                <button onclick="downgradeUser()" class="red action-btn">downgrade</button>
+            </div>
+        </div>
+    </div>
+    <div id="reactivateModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>reactivate user</h2>
+                <i data-target="reactivateModal" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal-content">
+                <p>are you sure you want to reactivate user <span class="content-text"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button data-target="reactivateModal" class="close">close</button>
+                <button onclick="reactivateUser()" class="green action-btn">reactivate</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adddLicencesModal" class="modal">
+        <div class="modal-container">
+            <input type="text" hidden>
+            <div class="modal-header">
+                <h2>add licence</h2>
+                <i data-target="upgradeModal" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal-content">
+                <h3 class="content-heading">how many licence you want to add</h3>
+                <input type="number" id="numberOfLicences">
+            </div>
+            <div class="modal-actions">
+                <button data-target="adddLicencesModal" class="close">close</button>
+                <button onclick="addLicence()" class="green action-btn">add</button>
+            </div>
+        </div>
+    </div>
+{% endblock modals %}
+
+
+{% block admin_content %}
+
+            <h1 class="admin-section-title">users management</h1>
+            <div class="users_managment">
+                <form class="invitation-form" method="post" action="">
+                    {{ new_invitation_form.hidden_tag() }}
+                    {{ new_invitation_form.submit(class="invitation-button") }}
+                </form>
+                    <table class="users_table">
+                        <tr>
+                            <th>id</th>
+                            <th>email</th>
+                            <th>N° of licenses</th>
+                            <th>invitation code</th>
+                            <th>action</th>
+                        </tr>
+                        {% for user in users %}
+                            {% if user.id != current_user.id %}
+                                <tr>
+                                    <td>{{user.id}}</td>
+                                    <td>
+                                        {{user.email}}
+                                        {% if user.is_suspended %}
+                                            <span>(suspended {% if user.user_type == 'admin' %} admin {% endif %})</span>
+                                        {% elif user.user_type == 'admin' %}
+                                            <span>(admin)</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="number-licence">
+                                        <div class="wrapper">
+                                            <span>{{ user.licence|length }}</span>
+                                            <img data-target="adddLicencesModal" onclick="showModal(event, '{{ user.email }}' )"  class="action-images plus-icon" src="{{ url_for('static', filename='css/plus.png') }}" alt="">
+                                        </div>
+                                    </td>
+                                    <td>{{ user.invited.code }}</td>
+                                    <td>
+                                        {% if user.is_suspended %}
+                                            <img data-target="reactivateModal" onclick="showModal(event, '{{ user.email }}' )" class="action-images" src="{{ url_for('static', filename='css/refresh.png') }}" alt="">
+                                        {% else %}
+                                            <img data-target="suspendModal" onclick="showModal(event, '{{ user.email }}' )" class="action-images" src="{{ url_for('static', filename='css/suspend.png') }}" alt="">
+                                        {% endif %}
+
+                                        <img data-target="deleteModal" onclick="showModal(event, '{{ user.email }}' )" class="action-images" src="{{ url_for('static', filename='css/delete.png') }}" alt="">
+                                        {% if user.user_type == 'admin' %}
+                                            <img data-target="downgradeModal" onclick="showModal(event, '{{ user.email }}' )" class="action-images" src="{{ url_for('static', filename='css/down-arrow.png') }}" alt="">
+                                        {% else %}
+                                            <img data-target="upgradeModal" onclick="showModal(event, '{{ user.email }}' )" class="action-images" src="{{ url_for('static', filename='css/up-arrow.png') }}" alt="">
+                                        {% endif %}
+
+
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+            </div>
+
+{% endblock admin_content %}
