@@ -43,7 +43,7 @@ def login():
             flash('account suspended', 'error')
             logout_user()
         return redirect(url_for('home'))
-    telegram_user = Telegram.query.first()
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -53,7 +53,11 @@ def login():
         else:
             flash('Login Failed. Please check email and password', 'error')
             return redirect(url_for('login'))
-    return render_template('login.html', telegram=telegram_user.username , title='Mailer Login', form=form)
+    telegram_user = Telegram.query.first()
+    telegram_username = None
+    if telegram_user:
+        telegram_username = telegram_user.username
+    return render_template('login.html', title='Login Page', form=form, telegram=telegram_username)
 
 @app.route("/reset", methods=['GET', 'POST'])
 def reset_password_page():
@@ -61,30 +65,34 @@ def reset_password_page():
         return redirect(url_for('login'))
     token = None
     form = ResetForm()
-    telegram_user = Telegram.query.first()
-
     if form.validate_on_submit():
         email = form.email.data
         if User.query.filter_by(email=email).first():
             token = serializer.dumps(email)
-            msg = Message('Password reset requests', sender='brodon@pathfinderchurch.com', recipients=[email])
+            msg = Message('Password reset requests', sender='moad_machkouri@outlook.fr', recipients=[email])
             msg.body = f'''
                 to reset your password please use the following link:
+                
                 {url_for('password_reset',token=token,_external=True)}
             '''
             mail.send(msg)
-            # redirect('/password_reset',token=token)
-        flash('if you are registred , you will get an email shortly .')
+        flash('if you are registered , you will get an email shortly .')
         return redirect(url_for('reset_password_page'))
-    return render_template('reset.html', telegram=telegram_user.username, title='Reset password', form=form)
+    telegram_user = Telegram.query.first()
+    telegram_username = None
+    if telegram_user:
+        telegram_username = telegram_user.username
+    return render_template('reset.html', telegram=telegram_username, title='Reset password', form=form)
 
 
 @app.route("/password_reset/<token>", methods=['GET', 'POST'])
 def password_reset(token):
+    print(token)
     if current_user.is_authenticated:
         return redirect(url_for('login'))
     try:
         email = serializer.loads(token, max_age=1800)
+        print(email)
         form = NewPasswordForm()
         if form.validate_on_submit():
             user = User.query.filter_by(email=email).first()
@@ -95,7 +103,7 @@ def password_reset(token):
         return render_template('new_password.html',title='Reset Password', form=form)
     except:
         flash('invalid url Please request a new password', 'error')
-        return redirect(url_for('reset_password'))
+        return redirect(url_for('reset_password_page'))
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -126,11 +134,9 @@ def register():
         return redirect(url_for('login'))
     telegram_user = Telegram.query.first()
     telegram_username = None
-    try:
+    if telegram_user:
         telegram_username = telegram_user.username
-        return render_template('register.html', title='Register', form=form, telegram=telegram_username)
-    except:
-        return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form, telegram=telegram_username)
 
 
 

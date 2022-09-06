@@ -3,14 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-
+import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['MAIL_SERVER'] = 'smtp.office365.com'
+app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'brodon@pathfinderchurch.com'
-app.config['MAIL_PASSWORD'] = 'BrotherDon-08'
+app.config['MAIL_USERNAME'] = 'moad_machkouri@outlook.fr'
+app.config['MAIL_PASSWORD'] = 'Startx-Startx1997'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 
@@ -29,5 +29,7 @@ from website_app.routes import auth_routes
 from website_app.routes import utility_routes
 from website_app.routes import user_routes
 
+if not os.path.isfile('./site.db'):
+    db.create_all()
 
 

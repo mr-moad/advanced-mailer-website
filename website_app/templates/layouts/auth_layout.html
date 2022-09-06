@@ -14,9 +14,9 @@
     <div class="auth-wrapper">
         <div class="auth-container box-shadow">
             <div class="auth-info">
-                <h2>Welcome to Owl Shop User Portal</h2>
-                <p>Get Invite Code from our Telegram - {% if '@' not in telegram %}"@"{% endif%}{{ telegram }} </p>
-                <a href="https://telegram.org/{{ telegram }}" target="_blank" class="primary-btn join-btn">
+                <h2>Welcome to our User Portal</h2>
+                <p>Get Invite Code from our Telegram - {% if telegram %} {{ telegram if "@" in telegram else '@'+ telegram }} {% endif %} </p>
+                <a href="https://telegram.org/{{ telegram or '' }}" target="_blank" class="primary-btn join-btn">
                     <i class="fa-brands fa-telegram"></i>
                     <span>Join us</span>
                 </a>
